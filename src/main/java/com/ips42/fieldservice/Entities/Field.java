@@ -1,33 +1,34 @@
 package com.ips42.fieldservice.Entities;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Date;
+
 @Entity
-@Table(name="Fields")
+@Table(name = "Fields")
 public class Field {
 
     @Id
-    @Column(name="id")
-    @GeneratedValue(strategy=GenerationType.AUTO)
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @Column(name="tenantId")
+    @Column(name = "tenantId")
     private Long tenantId;
-    @Column(name="fieldId")
+    @Column(name = "fieldId")
     private Long fieldId;
-    @Column(name="arrayGIS")
+    @Column(name = "arrayGIS")
     private Object arrayGIS;
-    @Column(name="createdOn")
+    @Column(name = "createdOn")
     private Date createdOn;
-    @Column(name="createdBy")
+    @Column(name = "createdBy")
     private String createdBy;
-    @Column(name="modifiedOn")
+    @Column(name = "modifiedOn")
     private Date modifiedOn;
-    @Column(name="modifiedBy")
+    @Column(name = "modifiedBy")
     private String modifiedBy;
-    public Field() {}
+
+    public Field() {
+    }
+
     public Long getTenantId() {
         return tenantId;
     }
@@ -83,10 +84,6 @@ public class Field {
     public void setModifiedBy(String modifiedBy) {
         this.modifiedBy = modifiedBy;
     }
-
-
-
-
 
 
 }

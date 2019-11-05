@@ -1,12 +1,8 @@
 package com.ips42.fieldservice.Entities;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistance.Column;
-import javax.persistance.Table;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Date;
+
 @Entity
 @Table(name="Measurements")
 public class Measurement {
@@ -33,7 +29,7 @@ public class Measurement {
     private Date date;
 
 
-    public Field() {}
+    public Measurement() {}
 
     public Long getTenantId() {
         return tenantId;
