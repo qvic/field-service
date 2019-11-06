@@ -39,6 +39,8 @@ dependencies {
     testImplementation 'org.springframework.security:spring-security-test'
 
     implementation 'org.hibernate:hibernate-spatial:5.4.8.Final'
+    implementation 'org.locationtech.jts.io:jts-io-common:1.16.0'
+//    implementation'org.geolatte:geolatte-common:0.8'
 //    implementation 'com.vladmihalcea:hibernate-types-52:2.7.1'
 
     liquibaseRuntime 'org.liquibase:liquibase-core:3.6.3'

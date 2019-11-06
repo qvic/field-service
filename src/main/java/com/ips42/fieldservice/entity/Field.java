@@ -4,8 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.geolatte.geom.C2D;
-import org.geolatte.geom.Polygon;
+import org.locationtech.jts.geom.Polygon;
 
 import javax.persistence.*;
 import java.time.Instant;
@@ -29,7 +28,7 @@ public class Field {
     private int fieldId;
 
     @Column(columnDefinition = "geometry(Polygon)")
-    private Polygon<C2D> gisPolygon;
+    private Polygon gisPolygon;
 
     @Column
     private Instant createdOn;
