@@ -1,15 +1,19 @@
 <?xml version="1.1" encoding="UTF-8" standalone="no"?>
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
-    <changeSet author="vic (generated)" id="1572999414038-1">
+    <changeSet author="vic (generated)" id="1573051797208-1">
         <createSequence sequenceName="hibernate_sequence"/>
     </changeSet>
-    <changeSet author="vic (generated)" id="1572999414038-2">
+    <changeSet author="vic (generated)" id="1573051797208-2">
         <createTable tableName="field">
             <column autoIncrement="true" name="id" type="SERIAL">
                 <constraints primaryKey="true" primaryKeyName="field_pk"/>
             </column>
-            <column name="tenant_id" type="INTEGER"/>
-            <column name="field_id" type="INTEGER"/>
+            <column name="tenant_id" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="field_id" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
             <column name="created_on" type="TIMESTAMP WITHOUT TIME ZONE">
                 <constraints nullable="false"/>
             </column>
@@ -18,27 +22,33 @@
             </column>
             <column name="modified_on" type="TIMESTAMP WITHOUT TIME ZONE"/>
             <column name="modified_by" type="TEXT"/>
-            <column name="gis_polygon" type="GEOGRAPHY">
+            <column name="gis_polygon" type="GEOMETRY">
                 <constraints nullable="false"/>
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="vic (generated)" id="1572999414038-3">
+    <changeSet author="vic (generated)" id="1573051797208-3">
         <createTable tableName="measurement">
             <column autoIncrement="true" name="id" type="SERIAL">
                 <constraints primaryKey="true" primaryKeyName="measurement_pk"/>
             </column>
-            <column name="tenant_id" type="INTEGER"/>
+            <column name="tenant_id" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
             <column name="device_id" type="INTEGER"/>
-            <column name="measure_id" type="INTEGER"/>
+            <column name="measure_id" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
             <column name="measures_json" type="TEXT"/>
-            <column name="longitude" type="FLOAT4"/>
-            <column name="latitude" type="FLOAT4"/>
-            <column name="field_id" type="INTEGER"/>
+            <column name="longitude" type="FLOAT8"/>
+            <column name="latitude" type="FLOAT8"/>
+            <column name="field_id" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
             <column name="date" type="TIMESTAMP WITHOUT TIME ZONE"/>
         </createTable>
     </changeSet>
-    <changeSet author="vic (generated)" id="1572999414038-4">
+    <changeSet author="vic (generated)" id="1573051797208-4">
         <createTable tableName="spatial_ref_sys">
             <column name="srid" type="INTEGER">
                 <constraints primaryKey="true" primaryKeyName="spatial_ref_sys_pkey"/>
@@ -49,10 +59,20 @@
             <column name="proj4text" type="VARCHAR(2048)"/>
         </createTable>
     </changeSet>
-    <changeSet author="vic (generated)" id="1572999414038-5">
-        <addForeignKeyConstraint baseColumnNames="field_id" baseTableName="measurement" constraintName="measurement_field_id_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="field" validate="true"/>
+    <changeSet author="vic (generated)" id="1573051797208-5">
+        <createIndex indexName="field_field_id_uindex" tableName="field" unique="true">
+            <column name="field_id"/>
+        </createIndex>
     </changeSet>
-    <changeSet author="vic (generated)" id="1572999414038-6">
+    <changeSet author="vic (generated)" id="1573051797208-6">
+        <createIndex indexName="measurement_measure_id_uindex" tableName="measurement" unique="true">
+            <column name="measure_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="vic (generated)" id="1573051797208-7">
+        <addForeignKeyConstraint baseColumnNames="field_id" baseTableName="measurement" constraintName="measurement_field_field_id_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="field_id" referencedTableName="field" validate="true"/>
+    </changeSet>
+    <changeSet author="vic (generated)" id="1573051797208-8">
         <createView fullDefinition="false" viewName="geography_columns"> SELECT current_database() AS f_table_catalog,
     n.nspname AS f_table_schema,
     c.relname AS f_table_name,
@@ -66,7 +86,7 @@
     pg_namespace n
   WHERE ((t.typname = 'geography'::name) AND (a.attisdropped = false) AND (a.atttypid = t.oid) AND (a.attrelid = c.oid) AND (c.relnamespace = n.oid) AND (c.relkind = ANY (ARRAY['r'::"char", 'v'::"char", 'm'::"char", 'f'::"char", 'p'::"char"])) AND (NOT pg_is_other_temp_schema(c.relnamespace)) AND has_table_privilege(c.oid, 'SELECT'::text));</createView>
     </changeSet>
-    <changeSet author="vic (generated)" id="1572999414038-7">
+    <changeSet author="vic (generated)" id="1573051797208-9">
         <createView fullDefinition="false" viewName="geometry_columns"> SELECT (current_database())::character varying(256) AS f_table_catalog,
     n.nspname AS f_table_schema,
     c.relname AS f_table_name,
@@ -98,7 +118,7 @@
           WHERE (s.consrc ~~* '%srid(% = %'::text)) sr ON (((sr.connamespace = n.oid) AND (sr.conrelid = c.oid) AND (a.attnum = ANY (sr.conkey)))))
   WHERE ((c.relkind = ANY (ARRAY['r'::"char", 'v'::"char", 'm'::"char", 'f'::"char", 'p'::"char"])) AND (NOT (c.relname = 'raster_columns'::name)) AND (t.typname = 'geometry'::name) AND (NOT pg_is_other_temp_schema(c.relnamespace)) AND has_table_privilege(c.oid, 'SELECT'::text));</createView>
     </changeSet>
-    <changeSet author="vic (generated)" id="1572999414038-8">
+    <changeSet author="vic (generated)" id="1573051797208-10">
         <createView fullDefinition="false" viewName="raster_columns"> SELECT current_database() AS r_table_catalog,
     n.nspname AS r_table_schema,
     c.relname AS r_table_name,
@@ -122,7 +142,7 @@
     pg_namespace n
   WHERE ((t.typname = 'raster'::name) AND (a.attisdropped = false) AND (a.atttypid = t.oid) AND (a.attrelid = c.oid) AND (c.relnamespace = n.oid) AND (c.relkind = ANY (ARRAY['r'::"char", 'v'::"char", 'm'::"char", 'f'::"char", 'p'::"char"])) AND (NOT pg_is_other_temp_schema(c.relnamespace)) AND has_table_privilege(c.oid, 'SELECT'::text));</createView>
     </changeSet>
-    <changeSet author="vic (generated)" id="1572999414038-9">
+    <changeSet author="vic (generated)" id="1573051797208-11">
         <createView fullDefinition="false" viewName="raster_overviews"> SELECT current_database() AS o_table_catalog,
     n.nspname AS o_table_schema,
     c.relname AS o_table_name,

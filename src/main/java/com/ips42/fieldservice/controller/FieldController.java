@@ -5,6 +5,7 @@ import com.ips42.fieldservice.repository.FieldRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -19,6 +20,17 @@ public class FieldController {
     @GetMapping("/fields")
     public ResponseEntity<Iterable<Field>> getAll(@RequestHeader int tenantId) {
         return ResponseEntity.ok(fieldRepository.findByTenantId(tenantId));
+    }
+
+    @GetMapping("/fields/{fieldId}/area")
+    public ResponseEntity<Map<String, Object>> getByAreaFieldId(@PathVariable int fieldId, @RequestHeader int tenantId) {
+        Optional<Double> areaByFieldId = Optional.ofNullable(fieldRepository.getAreaByFieldId(tenantId, fieldId));
+
+        if (areaByFieldId.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(Map.of("area", areaByFieldId.get()));
     }
 
     @GetMapping("/fields/{fieldId}")

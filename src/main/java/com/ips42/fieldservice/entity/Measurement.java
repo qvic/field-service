@@ -17,7 +17,7 @@ public class Measurement {
 
     @Id
     @Column
-    @GeneratedValue(strategy=GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
     @Column
@@ -27,19 +27,19 @@ public class Measurement {
     private int fieldId;
 
     @Column
-    private int deviceId;
+    private int measureId;
 
     @Column
-    private int measureId;
+    private Integer deviceId;
 
     @Column
     private String measuresJson;
 
     @Column
-    private float longitude;
+    private Double longitude;
 
     @Column
-    private float latitude;
+    private Double latitude;
 
     @Column
     private Instant date;
