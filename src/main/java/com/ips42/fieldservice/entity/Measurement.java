@@ -18,16 +18,16 @@ public class Measurement {
     @Id
     @Column
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
+    private Integer id;
 
     @Column
-    private int tenantId;
+    private Integer tenantId;
 
     @Column
-    private int fieldId;
+    private Integer fieldId;
 
     @Column
-    private int measureId;
+    private Integer measureId;
 
     @Column
     private Integer deviceId;

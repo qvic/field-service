@@ -19,13 +19,13 @@ public class Field {
     @Id
     @Column
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
+    private Integer id;
 
     @Column
-    private int tenantId;
+    private Integer tenantId;
 
     @Column
-    private int fieldId;
+    private Integer fieldId;
 
     @Column(columnDefinition = "geometry(Polygon)")
     private Polygon gisPolygon;
