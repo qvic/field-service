@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Objects;
 
 class ParseCommand {
 
@@ -21,12 +22,12 @@ class ParseCommand {
     private Parser parser;
 
     ParseCommand(MeasurementFile measurementFile, Parser parser) {
-        this.measurementFile = measurementFile;
+        this.measurementFile = Objects.requireNonNull(measurementFile);
         this.parser = parser;
     }
 
     List<Measurement> execute() {
-//            return parser.parseMeasurements(Files.readString(Paths.get(file.getFilePath())));
+//        return parser.parseMeasurements(Files.readString(Paths.get(file.getFilePath())));
 
         log.info("Started parsing file " + measurementFile);
         try {
@@ -34,7 +35,6 @@ class ParseCommand {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-        log.info("Finished parsing file " + measurementFile);
 
         Measurement dummy = new Measurement();
         dummy.setDate(Instant.now());
@@ -42,6 +42,8 @@ class ParseCommand {
         dummy.setFieldId(1);
         dummy.setMeasureId(dummyMeasureId++);
         dummy.setMeasuresJson("{\"test\":\"test\"}");
+
+        log.info("Finished parsing file " + measurementFile);
 
         return List.of(dummy);
     }

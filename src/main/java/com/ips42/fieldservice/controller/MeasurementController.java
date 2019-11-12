@@ -1,10 +1,12 @@
 package com.ips42.fieldservice.controller;
 
-import com.ips42.fieldservice.entity.Field;
 import com.ips42.fieldservice.entity.Measurement;
+import com.ips42.fieldservice.repository.MeasurementFileRepository;
 import com.ips42.fieldservice.repository.MeasurementRepository;
+import com.ips42.fieldservice.service.StorageService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -12,10 +14,15 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 public class MeasurementController {
 
-    private MeasurementRepository measurementRepository;
+    private static final Logger log = LoggerFactory.getLogger(MeasurementController.class);
 
-    public MeasurementController(MeasurementRepository measurementRepository) {
+    private MeasurementRepository measurementRepository;
+    private StorageService storageService;
+
+    public MeasurementController(MeasurementRepository measurementRepository,
+                                 StorageService storageService) {
         this.measurementRepository = measurementRepository;
+        this.storageService = storageService;
     }
 
     @GetMapping("/measurements")
@@ -45,7 +52,8 @@ public class MeasurementController {
 
     @PostMapping("/measurements")
     public ResponseEntity uploadMeasurementFile(@RequestParam(value = "file") MultipartFile file) {
-        System.out.println("Storing file " + file);
+        log.info("Got file " + file);
+        storageService.storeFile(file);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 }
