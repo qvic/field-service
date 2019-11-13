@@ -10,11 +10,12 @@ import org.slf4j.LoggerFactory;
 import java.time.Instant;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicInteger;
 
 class ParseCommand {
 
     private static final Logger log = LoggerFactory.getLogger(ParseCommand.class);
-    private static int dummyMeasureId = 0;
+    private static AtomicInteger dummyMeasureId = new AtomicInteger(0);
 
     @Getter
     private MeasurementFile measurementFile;
@@ -40,8 +41,8 @@ class ParseCommand {
         dummy.setDate(Instant.now());
         dummy.setTenantId(1);
         dummy.setFieldId(1);
-        dummy.setMeasureId(dummyMeasureId++);
-        dummy.setMeasuresJson("{\"test\":\"test\"}");
+        dummy.setMeasureId(dummyMeasureId.getAndIncrement());
+        dummy.setMeasuresJson(measurementFile.getContent());
 
         log.info("Finished parsing file " + measurementFile);
 

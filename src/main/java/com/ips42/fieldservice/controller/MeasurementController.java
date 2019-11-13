@@ -1,6 +1,7 @@
 package com.ips42.fieldservice.controller;
 
 import com.ips42.fieldservice.entity.Measurement;
+import com.ips42.fieldservice.entity.MeasurementFile;
 import com.ips42.fieldservice.repository.MeasurementFileRepository;
 import com.ips42.fieldservice.repository.MeasurementRepository;
 import com.ips42.fieldservice.service.StorageService;
@@ -10,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @RestController
 public class MeasurementController {
@@ -53,7 +56,11 @@ public class MeasurementController {
     @PostMapping("/measurements")
     public ResponseEntity uploadMeasurementFile(@RequestParam(value = "file") MultipartFile file) {
         log.info("Got file " + file);
-        storageService.storeFile(file);
+        try {
+            storageService.storeFile(file);
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 }

@@ -14,16 +14,14 @@ import java.util.concurrent.BlockingQueue;
 @Service
 class CommandExecutorService {
 
-    private static final Logger log = LoggerFactory.getLogger(CommandExecutorService.class);
+    private CommandCompletionService commandCompletionService;
 
-    private CommandResultService commandResultService;
-
-    public CommandExecutorService(CommandResultService commandResultService) {
-        this.commandResultService = commandResultService;
+    public CommandExecutorService(CommandCompletionService commandCompletionService) {
+        this.commandCompletionService = commandCompletionService;
     }
 
     @Async
-    public void executeCommands(BlockingQueue<ParseCommand> queue, Set<MeasurementFile> queueFileSet) {
+    public void executeCommands(BlockingQueue<ParseCommand> queue, Set<MeasurementFile> fileSet) {
         while (true) {
             ParseCommand command;
             try {
@@ -33,9 +31,8 @@ class CommandExecutorService {
             }
 
             List<Measurement> result = command.execute();
-            log.debug("Executed command " + command + ". Result: " + result);
-            commandResultService.addMeasurementsAndCommitParsing(command, result);
-            queueFileSet.remove(command.getMeasurementFile());
+            commandCompletionService.addMeasurementsAndCommitParsing(command, result);
+            fileSet.remove(command.getMeasurementFile());
         }
     }
 }

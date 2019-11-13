@@ -26,7 +26,7 @@ public class ParsingService {
 
     private Parser parser;
     private BlockingQueue<ParseCommand> queue;
-    private Set<MeasurementFile> queueFileSet;
+    private Set<MeasurementFile> fileSet;
 
     public ParsingService(MeasurementFileRepository measurementFileRepository,
                           CommandExecutorService commandExecutorService,
@@ -35,26 +35,26 @@ public class ParsingService {
         this.parser = parser;
         this.commandExecutorService = commandExecutorService;
         this.queue = new LinkedBlockingQueue<>();
-        this.queueFileSet = Collections.newSetFromMap(new ConcurrentHashMap<>());
+        this.fileSet = Collections.newSetFromMap(new ConcurrentHashMap<>());
     }
 
     @Scheduled(fixedRate = 1000)
     private void refreshQueue() throws InterruptedException {
-        log.debug("Refreshing...");
+        log.info("Refreshing...");
         List<MeasurementFile> notProcessedFiles = measurementFileRepository.findAllByProcessedFalse();
 
         for (MeasurementFile file : notProcessedFiles) {
 
-            if (!queueFileSet.contains(file)) {
+            if (!fileSet.contains(file)) {
                 queue.put(new ParseCommand(file, parser));
-                queueFileSet.add(file);
-                log.debug("Put file " + file);
+                fileSet.add(file);
+                log.info("Put file " + file);
             }
         }
     }
 
     @PostConstruct
     public void executeCommands() {
-        commandExecutorService.executeCommands(queue, queueFileSet);
+        commandExecutorService.executeCommands(queue, fileSet);
     }
 }

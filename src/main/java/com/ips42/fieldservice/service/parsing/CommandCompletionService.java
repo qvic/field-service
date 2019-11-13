@@ -10,13 +10,13 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
-class CommandResultService {
+class CommandCompletionService {
 
     private MeasurementRepository measurementRepository;
     private MeasurementFileRepository measurementFileRepository;
 
-    public CommandResultService(MeasurementRepository measurementRepository,
-                                MeasurementFileRepository measurementFileRepository) {
+    public CommandCompletionService(MeasurementRepository measurementRepository,
+                                    MeasurementFileRepository measurementFileRepository) {
         this.measurementRepository = measurementRepository;
         this.measurementFileRepository = measurementFileRepository;
     }

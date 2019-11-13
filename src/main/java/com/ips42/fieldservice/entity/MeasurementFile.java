@@ -24,7 +24,7 @@ public class MeasurementFile {
     private Integer id;
 
     @Column(nullable = false)
-    private String filePath;
+    private String content;
 
     @Column(nullable = false)
     private Boolean processed;
@@ -34,12 +34,11 @@ public class MeasurementFile {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         MeasurementFile that = (MeasurementFile) o;
-        return id.equals(that.id) &&
-                filePath.equals(that.filePath);
+        return id.equals(that.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, filePath);
+        return Objects.hash(id);
     }
 }
