@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/fielddb
+    url: jdbc:postgresql://localhost:5432/field_db
     username: postgres
     password: postgres
   jpa:
