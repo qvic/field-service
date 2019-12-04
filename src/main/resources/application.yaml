@@ -9,3 +9,6 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.spatial.dialect.postgis.PostgisDialect
+logging:
+  level:
+    root: info

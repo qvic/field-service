@@ -32,8 +32,8 @@ public class FieldController {
     }
 
     @PostMapping(value = "/fields", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public void createField(@RequestBody FieldDto field) {
-        fieldService.saveField(field);
+    public ResponseEntity<FieldDto> createField(@RequestBody FieldDto field) {
+        return ResponseEntity.of(fieldService.saveField(field));
     }
 
     @PutMapping("/fields/{fieldId}")

@@ -1,7 +1,9 @@
 package com.ips42.fieldservice.util;
 
 import com.ips42.fieldservice.entity.Measurement;
+import com.ips42.fieldservice.service.TenantService;
 import com.ips42.fieldservice.service.parsing.ParsingService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,11 +17,13 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Component
+@RequiredArgsConstructor
 public class Parser {
 
-    private static final Logger log = LoggerFactory.getLogger(ParsingService.class);
+    private static final Logger log = LoggerFactory.getLogger(Parser.class);
 
     private final Pattern linePattern = Pattern.compile("\n");
+    private final TenantService tenantService;
 
     public List<Measurement> parseMeasurements(String measurements) {
         log.info(measurements);
@@ -35,7 +39,7 @@ public class Parser {
                     .toArray(Integer[]::new));
 
             m.setDate(Instant.now());
-            m.setTenantId("1");
+            m.setTenantId(tenantService.getCurrentTenantId());
             m.setMeasureId(String.valueOf(UUID.randomUUID()));
 
             return m;
