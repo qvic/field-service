@@ -1,9 +1,13 @@
 package com.ips42.fieldservice.entity;
 
+import com.vladmihalcea.hibernate.type.array.IntArrayType;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
+import org.hibernate.annotations.TypeDefs;
 
 import javax.persistence.*;
 import java.time.Instant;
@@ -13,6 +17,12 @@ import java.time.Instant;
 @Setter
 @NoArgsConstructor
 @Entity
+@TypeDefs({
+        @TypeDef(
+                name = "int-array",
+                typeClass = IntArrayType.class
+        )
+})
 public class Measurement {
 
     @Id
@@ -21,19 +31,20 @@ public class Measurement {
     private Integer id;
 
     @Column
-    private Integer tenantId;
+    private String tenantId;
 
     @Column
-    private Integer fieldId;
+    private String fieldId;
 
     @Column
-    private Integer measureId;
+    private String measureId;
 
     @Column
-    private Integer deviceId;
+    private String deviceId;
 
-    @Column
-    private String measuresJson;
+    @Type(type = "int-array")
+    @Column(columnDefinition = "integer[]")
+    private Integer[] measures;
 
     @Column
     private Double longitude;

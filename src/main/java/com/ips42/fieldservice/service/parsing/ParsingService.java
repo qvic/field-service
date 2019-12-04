@@ -5,6 +5,7 @@ import com.ips42.fieldservice.repository.MeasurementFileRepository;
 import com.ips42.fieldservice.util.Parser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -40,7 +41,6 @@ public class ParsingService {
 
     @Scheduled(fixedRate = 1000)
     private void refreshQueue() throws InterruptedException {
-        log.info("Refreshing...");
         List<MeasurementFile> notProcessedFiles = measurementFileRepository.findAllByProcessedFalse();
 
         for (MeasurementFile file : notProcessedFiles) {
@@ -48,7 +48,6 @@ public class ParsingService {
             if (!fileSet.contains(file)) {
                 queue.put(new ParseCommand(file, parser));
                 fileSet.add(file);
-                log.info("Put file " + file);
             }
         }
     }

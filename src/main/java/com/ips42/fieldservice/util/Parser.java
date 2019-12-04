@@ -1,11 +1,48 @@
 package com.ips42.fieldservice.util;
 
+import com.ips42.fieldservice.entity.Measurement;
+import com.ips42.fieldservice.service.parsing.ParsingService;
+import lombok.extern.log4j.Log4j2;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+
+import java.time.Instant;
+import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Component
 public class Parser {
 
-    public String parseMeasurements(String measurements) {
-        return measurements;
+    private static final Logger log = LoggerFactory.getLogger(ParsingService.class);
+
+    private final Pattern linePattern = Pattern.compile("\n");
+
+    public List<Measurement> parseMeasurements(String measurements) {
+        log.info(measurements);
+
+        List<Measurement> collect = linePattern.splitAsStream(measurements).map(s -> {
+            String[] coordsAndMeasures = s.split(" ");
+            Measurement m = new Measurement();
+            m.setLatitude(Double.parseDouble(coordsAndMeasures[0]));
+            m.setLongitude(Double.parseDouble(coordsAndMeasures[1]));
+
+            m.setMeasures(Arrays.stream(coordsAndMeasures).skip(2)
+                    .map(Integer::parseInt)
+                    .toArray(Integer[]::new));
+
+            m.setDate(Instant.now());
+            m.setTenantId("1");
+            m.setMeasureId(String.valueOf(UUID.randomUUID()));
+
+            return m;
+        }).collect(Collectors.toList());
+
+        log.info(collect.toString());
+
+        return collect;
     }
 }

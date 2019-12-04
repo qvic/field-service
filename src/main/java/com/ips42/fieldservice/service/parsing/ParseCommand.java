@@ -28,24 +28,6 @@ class ParseCommand {
     }
 
     List<Measurement> execute() {
-//        return parser.parseMeasurements(Files.readString(Paths.get(file.getFilePath())));
-
-        log.info("Started parsing file " + measurementFile);
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-
-        Measurement dummy = new Measurement();
-        dummy.setDate(Instant.now());
-        dummy.setTenantId(1);
-        dummy.setFieldId(1);
-        dummy.setMeasureId(dummyMeasureId.getAndIncrement());
-        dummy.setMeasuresJson(measurementFile.getContent());
-
-        log.info("Finished parsing file " + measurementFile);
-
-        return List.of(dummy);
+        return parser.parseMeasurements(measurementFile.getContent());
     }
 }
