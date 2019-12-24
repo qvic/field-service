@@ -41,17 +41,19 @@ public class Field {
     @Column(columnDefinition = "geometry(Polygon)")
     private Polygon gisPolygon;
 
+    @CreatedDate
     @Column
     private Instant createdOn;
 
+    @CreatedBy
     @Column
     private String createdBy;
 
-//    @LastModifiedDate
+    @LastModifiedDate
     @Column
     private Instant modifiedOn;
 
-//    @LastModifiedBy
+    @LastModifiedBy
     @Column
     private String modifiedBy;
 

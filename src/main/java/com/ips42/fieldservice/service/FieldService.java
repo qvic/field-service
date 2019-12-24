@@ -3,13 +3,11 @@ package com.ips42.fieldservice.service;
 import com.ips42.fieldservice.dto.FieldDto;
 import com.ips42.fieldservice.entity.Field;
 import com.ips42.fieldservice.repository.FieldRepository;
-import com.ips42.fieldservice.util.Parser;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -43,7 +41,7 @@ public class FieldService {
             return Optional.empty();
         }
 
-        Field updatedField = dto.toField(tenantId, "user", Instant.now());
+        Field updatedField = dto.toField(tenantId);
         updatedField.setId(fieldById.get().getId());
         fieldRepository.save(updatedField);
 
@@ -51,12 +49,11 @@ public class FieldService {
     }
 
     public Optional<FieldDto> saveField(FieldDto dto) {
-        // todo auditing
-        Field field = dto.toField(tenantService.getCurrentTenantId(), "user", Instant.now());
+        Field field = dto.toField(tenantService.getCurrentTenantId());
 
-        Boolean disjointAndValidField = fieldRepository.isDisjointAndValidField(field.getGisPolygon().toString());
-
-        if (disjointAndValidField) {
+        if (fieldRepository.isDisjointAndValidField(
+                tenantService.getCurrentTenantId(),
+                field.getGisPolygon().toString())) {
             Field saved = fieldRepository.save(field);
             return Optional.of(saved.toFieldDto());
         }

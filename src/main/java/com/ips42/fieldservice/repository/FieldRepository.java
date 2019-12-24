@@ -18,6 +18,8 @@ public interface FieldRepository extends PagingAndSortingRepository<Field, Integ
     void deleteByTenantIdAndFieldId(String tenantId, String fieldId);
 
     @Query(nativeQuery = true,
-            value = "SELECT count(*) = 0 FROM field f WHERE st_isvalid(st_geomfromtext(?1)) and st_disjoint(f.gis_polygon, st_geomfromtext(?1))")
-    Boolean isDisjointAndValidField(String fieldPolygon);
+            value = "SELECT st_isvalid(st_geomfromtext(?2)) AND " +
+                    "(SELECT count(f.id) = 0 FROM field f " +
+                    "WHERE f.tenant_id = ?1 AND NOT st_disjoint(f.gis_polygon, st_geomfromtext(?2)))")
+    Boolean isDisjointAndValidField(String tenantId, String fieldGisPolygon);
 }
